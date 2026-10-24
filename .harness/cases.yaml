@@ -1,0 +1,34 @@
+# Runtime activation cases for the prompt-me skill (part A). prompt-me is
+# user-invoked, so there is no implicit case: Forge runs the explicit case
+# as /prompt-me <prompt> in Claude Code and $prompt-me <prompt> in Codex.
+# Claude Code cases permit only contained tools, so the skill's write of
+# .tmp/ files is not exercised here; the cases check activation only.
+cases:
+- id: prompt-me-explicit
+  part_id: A
+  mode: explicit
+  prompt: >-
+    add input validation to the signup handler in app.py so empty emails
+    are rejected
+  expected: activates
+  permitted_tools:
+    claude-code: [Skill, Read, Grep, Glob]
+    codex: [command_execution]
+  fixtures:
+    app.py: |
+      def signup(email, password):
+          users.append({"email": email, "password": password})
+          return "ok"
+- id: prompt-me-near-miss
+  part_id: A
+  mode: negative
+  prompt: >-
+    Reword the greeting text in greeting.txt so it sounds friendlier;
+    just tell me the new sentence.
+  expected: does-not-activate
+  permitted_tools:
+    claude-code: [Skill, Read, Grep, Glob]
+    codex: [command_execution]
+  fixtures:
+    greeting.txt: |
+      Hello user. State your request.
