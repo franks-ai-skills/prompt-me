@@ -5,11 +5,11 @@
 - [Harness Forge](https://github.com/franks-ai-skills/harness-forge) verifier: 0.4.0 (source unknown)
 - Confirmed configuration digest: d00eeb5e6a1edbb730f3c51db4f2823a4e4748107e673eafc3048c1f5e689b01
 - Confirmed parts: A
-- Decision record digest: 090b08465ad8dac568bc77e5ca1ec547996454eec44618bf66b97af3db760bc6
+- Decision record digest: 04d136db8df7edcbbfb379a87b6399050b21907ddcb4412cc26d88e475584c17
 - Whole-idea answers and targets: `{"facts": {"bypass_mode": true, "lethal_trifecta": true, "opens_prs": false, "plan_controls": "available", "reach": "public", "target_set": "both", "untrusted_repo": true}, "hosting": {"plan": "free", "platform": "github", "visibility": "public"}, "reach": "public", "targets": ["claude-code", "codex"]}` (digest d050a5bb011e4c946b7b15da35a8c18b60decc2df4dde9debbaa44247b4f5d90)
 - Rule content digest: 5434c2fa865952f2d074f180ba164f66ae93214c9c0ed39575b50ba90c124def
 - Accepted Idea KB revision: a9d1a41ce855fec682d5d975c28a3a379bd13a4b61c47d4590c778c3e85eea39
-- Review scope: Review (recommended): judged A
+- Review scope: Extensive review (rarely needed): judged A
 - Rule overrides: none
 - Checker versions digest: 1070f5e9c077925074cc173f075f918ce98998206fdaa029b5527b17b3f3d326
 
@@ -31,67 +31,67 @@ Workers ran under `best-effort-v1` with isolation status `not-certified`. Resear
 - Recorded builder: Harness Forge 0.4.0 (source unknown)
 - Built outputs: match that build
 - Confirmed answers: `{"event_without_agent": false, "every_time": "usually", "irreversible": false, "job": "procedure", "must_survive_compromise": "not-required", "own_context": false, "side_effects": false, "trigger": "user", "who_disables": "contributor"}`
-- Goal verdict: met (The files achieve the goal. The skill is user-invoked in both harnesses. It gathers read-only context with an allowlist that applies until approval. It drafts the fixed section layout with untrusted material fenced and labelled, and limits Context to escaped repository data, with commit subjects only under 'git log'. Before any write it runs preflight checks for links and containment, treats missing paths as expected, stops without writing on failure and does not claim race-free writes. It creates .tmp/.gitignore with '*' only when it is missing and saves .tmp/prompt-me-<suffix>.md. It replies with only the path, a one-line intent and the two ways to continue, then stops. All eight accepted requirements are satisfied. The README reports the outside controls as recommended and not verified.)
+- Goal verdict: met (The files meet the goal and all eight accepted requirements. The skill is user-invoked in both harnesses and gathers only read-only context, with git commands using --no-optional-locks. It drafts the fixed section layout, keeping untrusted material in one fenced, source-labeled section and only escaped repository data in Context. Before writing it runs the symbolic-link and containment preflight and stops on failure, without claiming race-freedom. It creates .tmp/.gitignore only when missing and writes .tmp/prompt-me-<suffix>.md. It replies with only the path, the intent line and the two ways to continue, then stops. The README states that the outside controls are recommended, not verified.)
 
 | Rule | Severity | Check | Result | Reason | Citation | Sources |
 | --- | --- | --- | --- | --- | --- | --- |
-| `idea.well-defined-prompt.a.git-no-optional-locks` | warning | judged | pass | Every git command listed or used carries --no-optional-locks. | .agents/skills/prompt-me/SKILL.md:13,27,57 | https://git-scm.com/docs/git |
+| `idea.well-defined-prompt.a.git-no-optional-locks` | warning | judged | pass | Every listed git command uses `--no-optional-locks`. | .agents/skills/prompt-me/SKILL.md:27,57 | https://git-scm.com/docs/git |
 | `idea.well-defined-prompt.a.issues-untrusted-any-owner` | error | judged | pass | Issue and PR titles, bodies and comments are treated as untrusted, 'also when the repository belongs to the user or their organization'. | .agents/skills/prompt-me/SKILL.md:14,38 | https://invariantlabs.ai/blog/mcp-github-vulnerability |
-| `idea.well-defined-prompt.a.no-fetched-instructions` | error | judged | pass | Embedded instructions are not acted on or moved into the Task; they are recorded as 'found in source, not adopted'. The Task is derived only from the user's own request. | .agents/skills/prompt-me/SKILL.md:11,38,62 | https://invariantlabs.ai/blog/mcp-github-vulnerability, https://genai.owasp.org/llmrisk/llm01-prompt-injection/ |
-| `idea.well-defined-prompt.a.read-only-allowlist` | error | judged | pass | Step 2 lists the allowed read-only actions: file listing and reading, specific git, uname, pwd and ls commands, gh/glab views and user-given URLs. It applies 'until the user approves the draft'. The only writes allowed are .tmp/, a missing .tmp/.gitignore and the prompt file, each after the checks pass. Every command used in later steps is on the list. | .agents/skills/prompt-me/SKILL.md:12,25-32 | https://genai.owasp.org/llmrisk/llm01-prompt-injection/ |
-| `idea.well-defined-prompt.a.tmp-gitignore` | error | judged | pass | Step 9 creates .tmp/.gitignore with exactly '*' only when it is missing, leaves an existing one unchanged and never modifies the repository's .gitignore. | .agents/skills/prompt-me/SKILL.md:15,55 | https://git-scm.com/docs/gitignore |
-| `idea.well-defined-prompt.a.tracked-drafts-note` | warning | judged | pass | Step 4 runs git ls-files .tmp read-only. Step 10 adds a note to Assumptions & open questions that the .tmp/.gitignore rule does not untrack those files. | .agents/skills/prompt-me/SKILL.md:36,65 | https://git-scm.com/docs/gitignore |
-| `idea.well-defined-prompt.a.untrusted-block` | error | judged | pass | Step 10 makes '## Untrusted reference material' the single place for content from issues, PRs, URLs, documents, repository files and commit subjects, with each item labelled by source and fenced. Context is limited to branch names, credential-free remotes, commit hashes and paths, introduced as repository-controlled names and written as code spans sized against backtick runs, with line breaks written as \n. Step 4 keeps commit subjects out of Context, and step 6 quotes file content only in the untrusted section. | .agents/skills/prompt-me/SKILL.md:10,36,40,61,66 | https://genai.owasp.org/llmrisk/llm01-prompt-injection/, https://arxiv.org/abs/2403.14720, https://spec.commonmark.org/0.31.2/ |
-| `idea.well-defined-prompt.a.write-preflight` | error | judged | pass | Before any write, the skill runs pwd -P and ls -ld on all three paths. Missing paths are treated as expected. It stops on any link, including dangling ones, on a wrong type, an existing draft, or a check that fails or is unclear, and reports that nothing was written. It says the checks do not detect changes made between the check and the write. | .agents/skills/prompt-me/SKILL.md:17,46-53 | https://cwe.mitre.org/data/definitions/59.html, https://cwe.mitre.org/data/definitions/367.html |
+| `idea.well-defined-prompt.a.no-fetched-instructions` | error | judged | pass | Embedded instructions are not acted on and not moved into the Task. The Task is derived only from the user's request, and instructions are never taken from untrusted material. | .agents/skills/prompt-me/SKILL.md:11,38,62,75 | https://invariantlabs.ai/blog/mcp-github-vulnerability, https://genai.owasp.org/llmrisk/llm01-prompt-injection/ |
+| `idea.well-defined-prompt.a.read-only-allowlist` | error | judged | pass | Step 2 lists the read-only actions: files, specific git commands, uname/pwd/ls, gh/glab view and URLs the user gave. It applies until approval and allows only writes of `.tmp/`, `.tmp/.gitignore` and the prompt file. Every command later steps use is on the list. | .agents/skills/prompt-me/SKILL.md:12,25-32 | https://genai.owasp.org/llmrisk/llm01-prompt-injection/ |
+| `idea.well-defined-prompt.a.tmp-gitignore` | error | judged | pass | `.tmp/.gitignore` is created with exactly `*` only when it is missing and is otherwise left unchanged. The repository's own .gitignore is never modified. | .agents/skills/prompt-me/SKILL.md:15,55 | https://git-scm.com/docs/gitignore |
+| `idea.well-defined-prompt.a.tracked-drafts-note` | warning | judged | pass | Step 4 runs `git --no-optional-locks ls-files .tmp`. If it lists files, step 10 adds the untracking note under Assumptions & open questions. | .agents/skills/prompt-me/SKILL.md:36,65 | https://git-scm.com/docs/gitignore |
+| `idea.well-defined-prompt.a.untrusted-block` | error | judged | pass | There is a single `## Untrusted reference material` section, and each item is labeled with its source (URL, path or git log). Context holds only branch names, credential-free remote URLs, paths and commit hashes, introduced as repository data and written as escaped code spans. Context explicitly excludes commit subjects and file content, and step 6 confines quotes to the untrusted section. | .agents/skills/prompt-me/SKILL.md:10,36,40,61,66 | https://genai.owasp.org/llmrisk/llm01-prompt-injection/, https://arxiv.org/abs/2403.14720, https://spec.commonmark.org/0.31.2/ |
+| `idea.well-defined-prompt.a.write-preflight` | error | judged | pass | Before writing, step 8 checks all three paths for links, including dangling ones, and for containment using `pwd -P`. Missing paths are treated as expected. A failed or unrunnable check stops the skill and reports that nothing was written, and the skill does not claim race-freedom. | .agents/skills/prompt-me/SKILL.md:17,46-53 | https://cwe.mitre.org/data/definitions/59.html, https://cwe.mitre.org/data/definitions/367.html |
 | `outside.ci.workflow-protected` | warning | judged | pass | The README states this condition for codeowners-agent-config, the only control that lists it. | README.md:17 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
-| `outside.codeowners.agent-config` | warning | judged | pass | The README recommends a CODEOWNERS entry covering .agents/, .claude/, .codex/, AGENTS.md, CODEOWNERS and the other agent configuration files, together with a branch rule that requires code-owner review. | README.md:18 | docs/guide/outside-gates.md#branch-protection-and-merge-rules-the-gate-is-separation-of-identities, https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners |
-| `outside.gate.no-broader-bypass` | warning | judged | pass | The README states this condition for both controls. | README.md:19,26 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
-| `outside.gate.periodic-verification` | warning | judged | pass | The README states periodic verification for both controls. | README.md:24,29 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
-| `outside.gate.plan-enforced` | warning | judged | pass | The README states this condition for codeowners-agent-config, the only control that lists it. | README.md:20 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate, https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets |
+| `outside.codeowners.agent-config` | warning | judged | pass | The README recommends a CODEOWNERS entry covering .agents/, .claude/, .codex/, AGENTS.md and the other agent configuration files, together with the branch rule that requires code-owner review. | README.md:18 | docs/guide/outside-gates.md#branch-protection-and-merge-rules-the-gate-is-separation-of-identities, https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners |
+| `outside.gate.no-broader-bypass` | warning | judged | pass | The README states the no-broader-bypass condition for both controls. | README.md:19,26 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
+| `outside.gate.periodic-verification` | warning | judged | pass | The README states the periodic-verification condition for both controls. | README.md:24,29 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
+| `outside.gate.plan-enforced` | warning | judged | pass | The README states the plan-enforcement condition for codeowners-agent-config, the only control that lists it. | README.md:20 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate, https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/about-rulesets |
 | `outside.gate.real-refs` | warning | judged | pass | The README states the real-refs condition for both codeowners-agent-config and outer-isolation. | README.md:23,28 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate |
 | `outside.merge.no-agent-bypass` | warning | judged | pass | The README states the no-agent-bypass condition for both controls. | README.md:21,27 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate, https://learn.microsoft.com/en-us/azure/devops/repos/git/branch-policies |
 | `outside.merge.requester-cannot-approve` | warning | judged | pass | The README states this condition for codeowners-agent-config, the only control that lists it. | README.md:22 | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate, docs/guide/outside-gates.md#branch-protection-and-merge-rules-the-gate-is-separation-of-identities, https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets |
-| `outside.merge.rule-for-agent-prs` | warning | judged | not-applicable | The agent opens no pull requests (context facts opens_prs: false), and the skill forbids commit and push while drafting. | request.json context.facts.opens_prs; SKILL.md:32 | docs/guide/outside-gates.md#four-outcomes-from-six-intake-questions |
+| `outside.merge.rule-for-agent-prs` | warning | judged | not-applicable | The context records opens_prs as false, and the skill forbids pushing, committing and acting on PRs. No agent-opened PRs are recommended. | request.json context.facts.opens_prs; SKILL.md:32 | docs/guide/outside-gates.md#four-outcomes-from-six-intake-questions |
 | `outside.readme.lists-controls` | error | script | pass | 2 control(s) listed | - | docs/guide/outside-gates.md#seven-conditions-turn-a-control-into-a-gate, docs/guide/outside-gates.md#four-outcomes-from-six-intake-questions |
-| `security.approval.claims-are-data` | warning | judged | pass | The work starts only when the user replies 'go ahead'. Instructions found in content are recorded as 'found in source, not adopted', and the skill never takes instructions from the untrusted section. No content claim is treated as approval. | .agents/skills/prompt-me/SKILL.md:38,75 | docs/guide/security.md#context-and-persistent-state |
-| `security.embedded-content.contained` | warning | judged | pass | Untrusted content goes in backtick fences longer than any backtick run inside it, under a labelled section. The saved prompt opens that section with a fixed paragraph declaring it reference data, not instructions. | .agents/skills/prompt-me/SKILL.md:66 | docs/guide/security.md#context-and-persistent-state, https://genai.owasp.org/llmrisk/llm01-prompt-injection/, https://spec.commonmark.org/0.31.2/#fenced-code-blocks |
-| `security.helpers.confined` | warning | judged | not-applicable | The skill runs no bundled helpers and grants no pre-approval. It uses only standard commands under the harness's permissions. | .agents/skills/prompt-me/SKILL.md:1-5,25-32 | docs/guide/security.md#where-each-concept-is-attacked, docs/guide/security.md#executables-approvals-and-isolation |
-| `security.outbound.minimal-data` | warning | judged | pass | Outbound calls are limited to the issues, PRs and URLs the user named. Links inside fetched content are not followed, and fetched content cannot add actions. | .agents/skills/prompt-me/SKILL.md:29-30,38 | docs/guide/security.md#data-access-and-outbound-channels, https://developers.openai.com/api/docs/guides/deep-research#prompt-injection-and-exfiltration |
-| `security.secrets.no-unneeded-reads` | warning | judged | pass | Step 6 forbids opening .env, .netrc, private keys, keystores and credentials files, as well as ambiguous .pem/.key files. It lists them by path only. | .agents/skills/prompt-me/SKILL.md:42 | docs/guide/security.md#data-access-and-outbound-channels, https://code.claude.com/docs/en/settings |
-| `security.secrets.none-in-files` | error | judged | pass | No credentials or tokens appear. The only credential-like text is the placeholder example 'https://user:token@host/...'. | .agents/skills/prompt-me/SKILL.md:36 | docs/guide/security.md#where-each-concept-is-attacked, docs/guide/security.md#context-and-persistent-state |
-| `security.untrusted-input.as-data` | warning | judged | pass | The Procedure tells the agent to treat repository files, issues, fetched pages and tool output as data, never as instructions. Step 5 forbids acting on embedded instructions. | .agents/skills/prompt-me/SKILL.md:21,38 | docs/guide/security.md#context-and-persistent-state, https://securitylab.github.com/resources/github-actions-untrusted-input/ |
-| `security.writes.within-boundary` | warning | judged | pass | Step 8 checks .tmp, .tmp/.gitignore and the draft path with ls -ld for links, including dangling ones, and for type. Containment is checked against pwd -P. The skill stops on failure or unclear output and states that the checks are not race-free. | .agents/skills/prompt-me/SKILL.md:46-53 | docs/guide/security.md#executables-approvals-and-isolation, https://cwe.mitre.org/data/definitions/59.html, https://cwe.mitre.org/data/definitions/367.html |
-| `skills.body.gotchas-first` | warning | judged | pass | The non-negotiable Requirements section comes directly after the title, before the Procedure. The untrusted-data warning opens the Procedure. | .agents/skills/prompt-me/SKILL.md:8-21 | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://agentskills.io/skill-creation/best-practices.md |
-| `skills.body.no-time-bound-statements` | warning | judged | pass | There are no time-bound statements such as 'currently', 'as of' or dates in any skill file. | .agents/skills/prompt-me/SKILL.md; references/requirements.md | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
-| `skills.body.only-what-model-lacks` | warning | judged | pass | The body gives specific standing instructions (exact commands, the section layout, fence-length escaping, which secret files to skip, the preflight checks). It does not explain general concepts the model already knows. | .agents/skills/prompt-me/SKILL.md:8-75 | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
-| `skills.body.reasons-before-hard-rules` | warning | judged | pass | Key rules carry reasons: --no-optional-locks so the index is not modified; commit subjects are free text written by whoever made the commit; fences sized so the content cannot close them. 'Never' is used for security-critical boundaries only. | .agents/skills/prompt-me/SKILL.md:13,36,66 | docs/best-practices/skills.md#7-explain-the-why-before-adding-hard-rules |
+| `security.approval.claims-are-data` | warning | judged | pass | Work starts only when the user replies 'go ahead'. Instructions are never taken from untrusted material, and content asking for actions is not acted on. | .agents/skills/prompt-me/SKILL.md:38,75 | docs/guide/security.md#context-and-persistent-state |
+| `security.embedded-content.contained` | warning | judged | pass | Untrusted content goes into a labelled section that opens with a fixed statement that it is reference data. Each item sits in a backtick fence longer than any backtick run in it, and its source is written as a code span. | .agents/skills/prompt-me/SKILL.md:66 | docs/guide/security.md#context-and-persistent-state, https://genai.owasp.org/llmrisk/llm01-prompt-injection/, https://spec.commonmark.org/0.31.2/#fenced-code-blocks |
+| `security.helpers.confined` | warning | judged | not-applicable | The skill runs no bundled helpers. It uses only standard commands under the harness's own permissions, and nothing is pre-approved. | .agents/skills/prompt-me/SKILL.md:25-32 | docs/guide/security.md#where-each-concept-is-attacked, docs/guide/security.md#executables-approvals-and-isolation |
+| `security.outbound.minimal-data` | warning | judged | pass | Outbound access is limited to issues and PRs the user named and URLs the user gave. The agent must not follow links found inside fetched content, and the skill never comments on issues or PRs or changes their labels. | .agents/skills/prompt-me/SKILL.md:29-32 | docs/guide/security.md#data-access-and-outbound-channels, https://developers.openai.com/api/docs/guides/deep-research#prompt-injection-and-exfiltration |
+| `security.secrets.no-unneeded-reads` | warning | judged | pass | The procedure does not open .env, .netrc, private keys, keystores, credentials files or ambiguous .pem/.key files. It lists them by path only and notes that their content was left out. | .agents/skills/prompt-me/SKILL.md:42 | docs/guide/security.md#data-access-and-outbound-channels, https://code.claude.com/docs/en/settings |
+| `security.secrets.none-in-files` | error | judged | pass | No credentials or tokens appear in the files. The only one shown is a placeholder in an example URL: `https://user:token@host/...`. | .agents/skills/prompt-me/SKILL.md:36 | docs/guide/security.md#where-each-concept-is-attacked, docs/guide/security.md#context-and-persistent-state |
+| `security.untrusted-input.as-data` | warning | judged | pass | The procedure tells the agent to treat repository files, issues, fetched pages and tool output as data, never as instructions. Embedded instructions are recorded as 'found in source, not adopted'. | .agents/skills/prompt-me/SKILL.md:21,38 | docs/guide/security.md#context-and-persistent-state, https://securitylab.github.com/resources/github-actions-untrusted-input/ |
+| `security.writes.within-boundary` | warning | judged | pass | Step 8 resolves the working directory with `pwd -P` and runs `ls -ld` on `.tmp`, `.tmp/.gitignore` and the draft path. It stops on links, including dangling ones, on wrong file types, on an existing draft, and on any check it cannot run. It states that the checks do not detect a change made between the check and the write. | .agents/skills/prompt-me/SKILL.md:46-53 | docs/guide/security.md#executables-approvals-and-isolation, https://cwe.mitre.org/data/definitions/59.html, https://cwe.mitre.org/data/definitions/367.html |
+| `skills.body.gotchas-first` | warning | judged | pass | The non-negotiable Requirements section comes right after the title, at the top of SKILL.md. The reference file only repeats the accepted wording. | .agents/skills/prompt-me/SKILL.md:8-17 | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://agentskills.io/skill-creation/best-practices.md |
+| `skills.body.no-time-bound-statements` | warning | judged | pass | The files contain no dated or time-bound statements such as 'currently', 'as of' or 'new in'. | .agents/skills/prompt-me/SKILL.md (whole file) | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
+| `skills.body.only-what-model-lacks` | warning | judged | pass | The body is skill-specific standing instructions: an allowlist, path checks, fencing rules and the section layout. It does not explain general knowledge. | .agents/skills/prompt-me/SKILL.md:8-75 | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
+| `skills.body.reasons-before-hard-rules` | warning | judged | pass | Most rules give their reason: git commands avoid modifying the index, commit subjects are free text written by others, and a check notes that it cannot detect a change made between the check and the write. 'Never' is limited to the safety-critical boundaries. | .agents/skills/prompt-me/SKILL.md:13,36,53 | docs/best-practices/skills.md#7-explain-the-why-before-adding-hard-rules |
 | `skills.body.size` | warning | script | pass | 1 skill(s) checked | - | docs/best-practices/skills.md#3-keep-skillmd-lean-and-put-gotchas-first, docs/concepts/skills.md#body, https://code.claude.com/docs/en/skills, https://agentskills.io/specification |
-| `skills.body.strictness-matches-fragility` | warning | judged | pass | Exact commands and checks are prescribed only for the fragile parts: preflight, escaping and the git lock flag. Other steps leave room for judgment, for example: 'Find the files… most likely touches'. There are no menus of options. | .agents/skills/prompt-me/SKILL.md:44-57 | docs/best-practices/skills.md#5-match-strictness-to-fragility, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
-| `skills.description.boundary` | warning | judged | pass | The description says: 'Not for doing the task, editing code or answering the question directly.' | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://agentskills.io/skill-creation/optimizing-descriptions.md |
+| `skills.body.strictness-matches-fragility` | warning | judged | pass | Prescriptive commands appear only for fragile operations: the write preflight, the git flags and fencing. Other steps give one default with a fallback, such as using `uname -sr` only when the harness names no operating system. | .agents/skills/prompt-me/SKILL.md:34,46-53 | docs/best-practices/skills.md#5-match-strictness-to-fragility, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
+| `skills.description.boundary` | warning | judged | pass | It names what the skill is not for: 'Not for doing the task, editing code or answering the question directly.' | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://agentskills.io/skill-creation/optimizing-descriptions.md |
 | `skills.description.concise` | warning | script | pass | 1 skill(s) checked | - | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, docs/research-notes/agent-harness-best-practices/skills.md |
 | `skills.description.length` | error | script | pass | 1 skill(s) checked | - | docs/concepts/skills.md#frontmatter, docs/vendors/codex/skills.md#skillmd-frontmatter-that-codex-reads, docs/vendors/opencode/skills.md#format, https://github.com/openai/codex/blob/main/codex-rs/ext/skills/src/loader/mod.rs, https://opencode.ai/docs/skills/ |
-| `skills.description.no-workflow-steps` | warning | judged | pass | The description summarizes the inputs, the output file and the fact that it stops for review. It does not list the procedure's steps, such as the preflight checks, the gitignore handling, the section layout or the reply format. | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://raw.githubusercontent.com/obra/superpowers/main/skills/writing-skills/SKILL.md |
-| `skills.description.voice` | warning | judged | pass | The description is in the third person ('Drafts…', 'gathers…'), not 'I can' or 'You can'. | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition |
-| `skills.description.what-and-when` | warning | judged | pass | The description opens with what the skill does ('Drafts a well-defined prompt from the user's request instead of carrying it out'), names the context it gathers and the output file, then gives trigger phrases a user would say. | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://learn.chatgpt.com/docs/build-skills, https://agentskills.io/skill-creation/optimizing-descriptions.md |
+| `skills.description.no-workflow-steps` | warning | judged | pass | The description summarizes what the skill does and produces: gathers context, saves the draft, stops for review. It does not list the numbered procedure, checks or section layout. | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://raw.githubusercontent.com/obra/superpowers/main/skills/writing-skills/SKILL.md |
+| `skills.description.voice` | warning | judged | pass | The description is in the third person ('Drafts…', 'gathers…', 'saves…'). It never says 'I can' or 'You can'. | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition |
+| `skills.description.what-and-when` | warning | judged | pass | The description starts with concrete verbs and objects ('Drafts a well-defined prompt…', 'saves it as .tmp/prompt-me-<intent>.md'). It then gives trigger phrases a user would say ('prompt me', 'draft a prompt for this'). | .agents/skills/prompt-me/SKILL.md:3 | docs/best-practices/skills.md#2-write-the-description-as-the-trigger-condition, https://learn.chatgpt.com/docs/build-skills, https://agentskills.io/skill-creation/optimizing-descriptions.md |
 | `skills.frontmatter.valid` | error | script | pass | 1 skill(s) checked | - | docs/vendors/opencode/skills.md#format, docs/vendors/codex/skills.md#skillmd-frontmatter-that-codex-reads, docs/vendors/claude-code/skills.md#format, docs/concepts/skills.md#frontmatter, https://opencode.ai/docs/skills/, https://agentskills.io/specification |
 | `skills.goal.no-must-hold-rule-in-skill` | error | judged | not-applicable | a condition in applies_to.when does not hold | - | docs/best-practices/skills.md#13-move-rules-that-must-hold-every-time-into-hooks, https://code.claude.com/docs/en/skills |
-| `skills.inputs.from-message` | warning | judged | pass | Step 1 takes the request from the text the user wrote alongside the invocation, and asks for it in one line when it is missing. There is no argument substitution. | .agents/skills/prompt-me/SKILL.md:23 | docs/best-practices/skills.md#8-make-side-effecting-skills-user-invoked-in-both-leads, docs/concepts/skills.md#body |
+| `skills.inputs.from-message` | warning | judged | pass | Step 1 takes the text the user wrote alongside the invocation as the request. If no request text was given, it asks for it in one line and stops. It does not use argument substitution. | .agents/skills/prompt-me/SKILL.md:23 | docs/best-practices/skills.md#8-make-side-effecting-skills-user-invoked-in-both-leads, docs/concepts/skills.md#body |
 | `skills.invocation.both-flags` | error | script | pass | 1 skill(s) checked | - | docs/concepts/skills.md#invocation-policy-in-both-leads, docs/best-practices/skills.md#8-make-side-effecting-skills-user-invoked-in-both-leads, https://code.claude.com/docs/en/skills, https://learn.chatgpt.com/docs/build-skills |
-| `skills.invocation.side-effects-user-invoked` | error | judged | pass | The skill writes files under .tmp/ and is user-invoked in both targets: disable-model-invocation is true for Claude Code, and allow_implicit_invocation is false for Codex. | .agents/skills/prompt-me/SKILL.md:4; agents/openai.yaml:2 | docs/best-practices/skills.md#8-make-side-effecting-skills-user-invoked-in-both-leads, https://code.claude.com/docs/en/skills, https://learn.chatgpt.com/docs/build-skills |
+| `skills.invocation.side-effects-user-invoked` | error | judged | pass | The skill writes files, and both target harnesses make it user-invoked only. Claude Code has `disable-model-invocation: true`. Codex has `allow_implicit_invocation: false`. | .agents/skills/prompt-me/SKILL.md:4; agents/openai.yaml:2 | docs/best-practices/skills.md#8-make-side-effecting-skills-user-invoked-in-both-leads, https://code.claude.com/docs/en/skills, https://learn.chatgpt.com/docs/build-skills |
 | `skills.name.format` | error | script | pass | 1 skill(s) checked | - | docs/guide/skills.md#portability, docs/concepts/skills.md#frontmatter, docs/vendors/opencode/skills.md#format, https://opencode.ai/docs/skills/, https://agentskills.io/specification |
 | `skills.package.no-auxiliary-docs` | warning | script | pass | 1 skill(s) checked | - | docs/best-practices/skills.md#anti-patterns, https://raw.githubusercontent.com/openai/skills/main/skills/.system/skill-creator/SKILL.md |
 | `skills.portable.frontmatter` | warning | script | pass | 1 skill(s) checked | - | docs/concepts/skills.md#frontmatter, docs/best-practices/skills.md#12-keep-one-canonical-copy-with-portable-frontmatter, https://code.claude.com/docs/en/skills |
 | `skills.portable.layout` | error | script | pass | 1 skill(s) linked | - | docs/concepts/skills.md#directory-layout, docs/guide/skills.md#portability, https://code.claude.com/docs/en/skills, https://learn.chatgpt.com/docs/build-skills |
 | `skills.portable.no-claude-placeholders` | warning | script | pass | 1 skill(s) checked | - | docs/concepts/skills.md#body, docs/guide/skills.md#portability, https://code.claude.com/docs/en/skills |
 | `skills.portable.plugin-layout` | error | script | not-applicable | a condition in applies_to.when does not hold | - | docs/concepts/skills.md#directory-layout, docs/vendors/claude-code/plugins.md#standard-layout, docs/vendors/codex/plugins.md#plugin-layout, https://code.claude.com/docs/en/plugins/manifest-reference, https://developers.openai.com/codex/plugins/build |
-| `skills.references.load-conditions` | warning | judged | pass | The single reference file is named with its load condition: read it when you need the exact accepted wording, rule id or source. It holds provenance (rule ids, sources) that SKILL.md does not repeat. | .agents/skills/prompt-me/SKILL.md:77-79 | docs/best-practices/skills.md#4-disclose-detail-progressively-with-explicit-triggers, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, https://agentskills.io/skill-creation/best-practices.md |
+| `skills.references.load-conditions` | warning | judged | pass | SKILL.md names the single reference file and says when to read it: when the exact accepted wording, the rule id or the source of a requirement is needed. The reference file holds only the accepted statements and their sources. | .agents/skills/prompt-me/SKILL.md:77-79; references/requirements.md | docs/best-practices/skills.md#4-disclose-detail-progressively-with-explicit-triggers, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, https://agentskills.io/skill-creation/best-practices.md |
 | `skills.references.one-level` | warning | script | pass | 1 skill(s) checked | - | docs/best-practices/skills.md#4-disclose-detail-progressively-with-explicit-triggers, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, https://agentskills.io/specification |
 | `skills.references.resolve` | error | script | pass | 1 skill(s) checked | - | docs/best-practices/skills.md#4-disclose-detail-progressively-with-explicit-triggers, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices |
 | `skills.reuse.reviewed-and-pinned` | error | judged | not-applicable | a condition in applies_to.when does not hold | - | docs/best-practices/skills.md#security, https://owasp.github.io/www-project-agentic-skills-top-10/ast01 |
-| `skills.scope.committed-for-automation` | warning | judged | not-applicable | This is a user-invoked drafting skill; CI or cloud runs do not need it. It is committed in project scope anyway (.agents/skills, with a .claude/skills link). | README.md:33; links .claude/skills/prompt-me | docs/concepts/skills.md#directory-layout, https://code.claude.com/docs/en/skills |
-| `skills.scripts.agent-caller` | warning | judged | not-applicable | The skill bundles no scripts. Its only files are SKILL.md, agents/openai.yaml and a reference markdown file. | request.json inputs.files | docs/best-practices/skills.md#6-put-deterministic-logic-in-tested-scripts, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, https://agentskills.io/skill-creation/using-scripts.md |
-| `skills.security.allowed-tools-least-privilege` | warning | judged | not-applicable | The frontmatter has no allowed-tools field, so the skill pre-grants no tools. | .agents/skills/prompt-me/SKILL.md:1-5 | docs/best-practices/skills.md#security, docs/vendors/claude-code/skills.md#limits-and-gotchas, https://code.claude.com/docs/en/skills |
-| `skills.security.no-surprising-content` | error | judged | pass | There are no hidden directives, remote fetch-and-run, encoded payloads or credential access. The skill explicitly avoids opening secret-bearing files. | .agents/skills/prompt-me/SKILL.md:42 | docs/best-practices/skills.md#security, https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md |
+| `skills.scope.committed-for-automation` | warning | judged | not-applicable | This is a user-invoked drafting skill, and no CI or cloud run needs it. It is still committed in project scope under .agents/skills, with a .claude/skills link. | README.md:33; request.json links | docs/concepts/skills.md#directory-layout, https://code.claude.com/docs/en/skills |
+| `skills.scripts.agent-caller` | warning | judged | not-applicable | The skill bundles no scripts. Its files are only SKILL.md, agents/openai.yaml and a reference markdown file. | request.json inputs.files | docs/best-practices/skills.md#6-put-deterministic-logic-in-tested-scripts, https://platform.claude.com/docs/en/agents-and-tools/agent-skills/best-practices, https://agentskills.io/skill-creation/using-scripts.md |
+| `skills.security.allowed-tools-least-privilege` | warning | judged | not-applicable | The frontmatter declares no allowed-tools, so no tools are pre-approved. | .agents/skills/prompt-me/SKILL.md:1-5 | docs/best-practices/skills.md#security, docs/vendors/claude-code/skills.md#limits-and-gotchas, https://code.claude.com/docs/en/skills |
+| `skills.security.no-surprising-content` | error | judged | pass | There are no hidden directives, fetch-and-run, encoded payloads or credential access. The skill explicitly avoids secret files. | .agents/skills/prompt-me/SKILL.md:42 | docs/best-practices/skills.md#security, https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md |
 
 Contested `skills.body.reasons-before-hard-rules`:
 - All-caps ALWAYS or NEVER is a yellow flag; explain the reasoning instead (https://raw.githubusercontent.com/anthropics/skills/main/skills/skill-creator/SKILL.md, https://agentskills.io/skill-creation/evaluating-skills.md)
@@ -108,10 +108,20 @@ Contested `skills.description.voice`:
 | A | prompt-me-explicit | claude-code 2.1.311 (Claude Code) | pass | /prompt-me was invoked | /prompt-me was invoked |
 | A | prompt-me-near-miss | claude-code 2.1.311 (Claude Code) | pass | - | no Skill tool call for the candidate |
 
+## Behavior tests
+
+| Part | Case | Harness | Result | Reason | Changed | Failed assertions |
+| --- | --- | --- | --- | --- | --- | --- |
+| A | prompt-me-no-shell-writes-nothing | claude-code 2.1.311 (Claude Code) | pass | activated (/prompt-me was invoked) and every assertion held | none | none |
+
+Observation gaps in claude-code: Claude Code's file tools are limited by its permission rules, not by an operating-system sandbox; a file written and removed again during the run is not in the before-and-after comparison; denials are those Claude Code reports for its own tool calls.
+
+An unavailable behavior case leaves the behavior unverified; it does not count as passed.
+
 ## Checked files
 
 ```
-e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7  .agents/skills/prompt-me/SKILL.md
+a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd  .agents/skills/prompt-me/SKILL.md
 a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94  .agents/skills/prompt-me/agents/openai.yaml
 2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2  .agents/skills/prompt-me/references/requirements.md
 4ffd160f12b8ae12ad745941377e818a46e10d8535ef05a59251eef7ba2543c3  README.md
@@ -137,11 +147,11 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
   },
   "bound_inputs": {
     "cases": {
-      "A": "5c702bcaf6876ad3e2f513413d7c3804d066a847889a90667c80b7d48fbb4bfe"
+      "A": "d31b8cba02f05fc58ad2f045ca94f3f737547f56edeac2edcdf9e701a28a099e"
     },
     "checkers": "1070f5e9c077925074cc173f075f918ce98998206fdaa029b5527b17b3f3d326",
     "files": {
-      ".agents/skills/prompt-me/SKILL.md": "e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7",
+      ".agents/skills/prompt-me/SKILL.md": "a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd",
       ".agents/skills/prompt-me/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
       ".agents/skills/prompt-me/references/requirements.md": "2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2",
       "README.md": "4ffd160f12b8ae12ad745941377e818a46e10d8535ef05a59251eef7ba2543c3"
@@ -150,7 +160,7 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
     "kb_version": "0.6.0",
     "overrides": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
     "parts": {
-      "A": "ce465b850f54828c55afcf21adeb9637b1a0810a54bb49a45e12daefcc4e1e2d"
+      "A": "eb4378a4d01bd58b1bc94b90c732db57a3d54deef6cbced97d94e2a3b9dee407"
     },
     "revision": "a9d1a41ce855fec682d5d975c28a3a379bd13a4b61c47d4590c778c3e85eea39",
     "rules": "5434c2fa865952f2d074f180ba164f66ae93214c9c0ed39575b50ba90c124def",
@@ -174,9 +184,9 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
     "A"
   ],
   "contract_digest": "d00eeb5e6a1edbb730f3c51db4f2823a4e4748107e673eafc3048c1f5e689b01",
-  "decision_digest": "090b08465ad8dac568bc77e5ca1ec547996454eec44618bf66b97af3db760bc6",
+  "decision_digest": "04d136db8df7edcbbfb379a87b6399050b21907ddcb4412cc26d88e475584c17",
   "file_hashes": {
-    ".agents/skills/prompt-me/SKILL.md": "e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7",
+    ".agents/skills/prompt-me/SKILL.md": "a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd",
     ".agents/skills/prompt-me/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
     ".agents/skills/prompt-me/references/requirements.md": "2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2",
     "README.md": "4ffd160f12b8ae12ad745941377e818a46e10d8535ef05a59251eef7ba2543c3"
@@ -209,7 +219,7 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
     {
       "goal_result": "met by the verified build",
       "goal_verdict": {
-        "reason": "The files achieve the goal. The skill is user-invoked in both harnesses. It gathers read-only context with an allowlist that applies until approval. It drafts the fixed section layout with untrusted material fenced and labelled, and limits Context to escaped repository data, with commit subjects only under 'git log'. Before any write it runs preflight checks for links and containment, treats missing paths as expected, stops without writing on failure and does not claim race-free writes. It creates .tmp/.gitignore with '*' only when it is missing and saves .tmp/prompt-me-<suffix>.md. It replies with only the path, a one-line intent and the two ways to continue, then stops. All eight accepted requirements are satisfied. The README reports the outside controls as recommended and not verified.",
+        "reason": "The files meet the goal and all eight accepted requirements. The skill is user-invoked in both harnesses and gathers only read-only context, with git commands using --no-optional-locks. It drafts the fixed section layout, keeping untrusted material in one fenced, source-labeled section and only escaped repository data in Context. Before writing it runs the symbolic-link and containment preflight and stops on failure, without claiming race-freedom. It creates .tmp/.gitignore only when missing and writes .tmp/prompt-me-<suffix>.md. It replies with only the path, the intent line and the two ways to continue, then stops. The README states that the outside controls are recommended, not verified.",
         "verdict": "met"
       },
       "harness_result": "verified",
@@ -291,196 +301,196 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:3",
-          "reason": "The description opens with what the skill does ('Drafts a well-defined prompt from the user's request instead of carrying it out'), names the context it gathers and the output file, then gives trigger phrases a user would say.",
+          "reason": "The description starts with concrete verbs and objects ('Drafts a well-defined prompt\u2026', 'saves it as .tmp/prompt-me-<intent>.md'). It then gives trigger phrases a user would say ('prompt me', 'draft a prompt for this').",
           "result": "pass",
           "rule_id": "skills.description.what-and-when"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:3",
-          "reason": "The description summarizes the inputs, the output file and the fact that it stops for review. It does not list the procedure's steps, such as the preflight checks, the gitignore handling, the section layout or the reply format.",
+          "reason": "The description summarizes what the skill does and produces: gathers context, saves the draft, stops for review. It does not list the numbered procedure, checks or section layout.",
           "result": "pass",
           "rule_id": "skills.description.no-workflow-steps"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:3",
-          "reason": "The description says: 'Not for doing the task, editing code or answering the question directly.'",
+          "reason": "It names what the skill is not for: 'Not for doing the task, editing code or answering the question directly.'",
           "result": "pass",
           "rule_id": "skills.description.boundary"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:3",
-          "reason": "The description is in the third person ('Drafts\u2026', 'gathers\u2026'), not 'I can' or 'You can'.",
+          "reason": "The description is in the third person ('Drafts\u2026', 'gathers\u2026', 'saves\u2026'). It never says 'I can' or 'You can'.",
           "result": "pass",
           "rule_id": "skills.description.voice"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:8-75",
-          "reason": "The body gives specific standing instructions (exact commands, the section layout, fence-length escaping, which secret files to skip, the preflight checks). It does not explain general concepts the model already knows.",
+          "reason": "The body is skill-specific standing instructions: an allowlist, path checks, fencing rules and the section layout. It does not explain general knowledge.",
           "result": "pass",
           "rule_id": "skills.body.only-what-model-lacks"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:8-21",
-          "reason": "The non-negotiable Requirements section comes directly after the title, before the Procedure. The untrusted-data warning opens the Procedure.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:8-17",
+          "reason": "The non-negotiable Requirements section comes right after the title, at the top of SKILL.md. The reference file only repeats the accepted wording.",
           "result": "pass",
           "rule_id": "skills.body.gotchas-first"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md; references/requirements.md",
-          "reason": "There are no time-bound statements such as 'currently', 'as of' or dates in any skill file.",
+          "citation": ".agents/skills/prompt-me/SKILL.md (whole file)",
+          "reason": "The files contain no dated or time-bound statements such as 'currently', 'as of' or 'new in'.",
           "result": "pass",
           "rule_id": "skills.body.no-time-bound-statements"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:77-79",
-          "reason": "The single reference file is named with its load condition: read it when you need the exact accepted wording, rule id or source. It holds provenance (rule ids, sources) that SKILL.md does not repeat.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:77-79; references/requirements.md",
+          "reason": "SKILL.md names the single reference file and says when to read it: when the exact accepted wording, the rule id or the source of a requirement is needed. The reference file holds only the accepted statements and their sources.",
           "result": "pass",
           "rule_id": "skills.references.load-conditions"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:44-57",
-          "reason": "Exact commands and checks are prescribed only for the fragile parts: preflight, escaping and the git lock flag. Other steps leave room for judgment, for example: 'Find the files\u2026 most likely touches'. There are no menus of options.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:34,46-53",
+          "reason": "Prescriptive commands appear only for fragile operations: the write preflight, the git flags and fencing. Other steps give one default with a fallback, such as using `uname -sr` only when the harness names no operating system.",
           "result": "pass",
           "rule_id": "skills.body.strictness-matches-fragility"
         },
         {
           "check": "judged",
           "citation": "request.json inputs.files",
-          "reason": "The skill bundles no scripts. Its only files are SKILL.md, agents/openai.yaml and a reference markdown file.",
+          "reason": "The skill bundles no scripts. Its files are only SKILL.md, agents/openai.yaml and a reference markdown file.",
           "result": "not-applicable",
           "rule_id": "skills.scripts.agent-caller"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:13,36,66",
-          "reason": "Key rules carry reasons: --no-optional-locks so the index is not modified; commit subjects are free text written by whoever made the commit; fences sized so the content cannot close them. 'Never' is used for security-critical boundaries only.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:13,36,53",
+          "reason": "Most rules give their reason: git commands avoid modifying the index, commit subjects are free text written by others, and a check notes that it cannot detect a change made between the check and the write. 'Never' is limited to the safety-critical boundaries.",
           "result": "pass",
           "rule_id": "skills.body.reasons-before-hard-rules"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:4; agents/openai.yaml:2",
-          "reason": "The skill writes files under .tmp/ and is user-invoked in both targets: disable-model-invocation is true for Claude Code, and allow_implicit_invocation is false for Codex.",
+          "reason": "The skill writes files, and both target harnesses make it user-invoked only. Claude Code has `disable-model-invocation: true`. Codex has `allow_implicit_invocation: false`.",
           "result": "pass",
           "rule_id": "skills.invocation.side-effects-user-invoked"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:23",
-          "reason": "Step 1 takes the request from the text the user wrote alongside the invocation, and asks for it in one line when it is missing. There is no argument substitution.",
+          "reason": "Step 1 takes the text the user wrote alongside the invocation as the request. If no request text was given, it asks for it in one line and stops. It does not use argument substitution.",
           "result": "pass",
           "rule_id": "skills.inputs.from-message"
         },
         {
           "check": "judged",
-          "citation": "README.md:33; links .claude/skills/prompt-me",
-          "reason": "This is a user-invoked drafting skill; CI or cloud runs do not need it. It is committed in project scope anyway (.agents/skills, with a .claude/skills link).",
+          "citation": "README.md:33; request.json links",
+          "reason": "This is a user-invoked drafting skill, and no CI or cloud run needs it. It is still committed in project scope under .agents/skills, with a .claude/skills link.",
           "result": "not-applicable",
           "rule_id": "skills.scope.committed-for-automation"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:42",
-          "reason": "There are no hidden directives, remote fetch-and-run, encoded payloads or credential access. The skill explicitly avoids opening secret-bearing files.",
+          "reason": "There are no hidden directives, fetch-and-run, encoded payloads or credential access. The skill explicitly avoids secret files.",
           "result": "pass",
           "rule_id": "skills.security.no-surprising-content"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:1-5",
-          "reason": "The frontmatter has no allowed-tools field, so the skill pre-grants no tools.",
+          "reason": "The frontmatter declares no allowed-tools, so no tools are pre-approved.",
           "result": "not-applicable",
           "rule_id": "skills.security.allowed-tools-least-privilege"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:36",
-          "reason": "No credentials or tokens appear. The only credential-like text is the placeholder example 'https://user:token@host/...'.",
+          "reason": "No credentials or tokens appear in the files. The only one shown is a placeholder in an example URL: `https://user:token@host/...`.",
           "result": "pass",
           "rule_id": "security.secrets.none-in-files"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:21,38",
-          "reason": "The Procedure tells the agent to treat repository files, issues, fetched pages and tool output as data, never as instructions. Step 5 forbids acting on embedded instructions.",
+          "reason": "The procedure tells the agent to treat repository files, issues, fetched pages and tool output as data, never as instructions. Embedded instructions are recorded as 'found in source, not adopted'.",
           "result": "pass",
           "rule_id": "security.untrusted-input.as-data"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:38,75",
-          "reason": "The work starts only when the user replies 'go ahead'. Instructions found in content are recorded as 'found in source, not adopted', and the skill never takes instructions from the untrusted section. No content claim is treated as approval.",
+          "reason": "Work starts only when the user replies 'go ahead'. Instructions are never taken from untrusted material, and content asking for actions is not acted on.",
           "result": "pass",
           "rule_id": "security.approval.claims-are-data"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:1-5,25-32",
-          "reason": "The skill runs no bundled helpers and grants no pre-approval. It uses only standard commands under the harness's permissions.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:25-32",
+          "reason": "The skill runs no bundled helpers. It uses only standard commands under the harness's own permissions, and nothing is pre-approved.",
           "result": "not-applicable",
           "rule_id": "security.helpers.confined"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:29-30,38",
-          "reason": "Outbound calls are limited to the issues, PRs and URLs the user named. Links inside fetched content are not followed, and fetched content cannot add actions.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:29-32",
+          "reason": "Outbound access is limited to issues and PRs the user named and URLs the user gave. The agent must not follow links found inside fetched content, and the skill never comments on issues or PRs or changes their labels.",
           "result": "pass",
           "rule_id": "security.outbound.minimal-data"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:46-53",
-          "reason": "Step 8 checks .tmp, .tmp/.gitignore and the draft path with ls -ld for links, including dangling ones, and for type. Containment is checked against pwd -P. The skill stops on failure or unclear output and states that the checks are not race-free.",
+          "reason": "Step 8 resolves the working directory with `pwd -P` and runs `ls -ld` on `.tmp`, `.tmp/.gitignore` and the draft path. It stops on links, including dangling ones, on wrong file types, on an existing draft, and on any check it cannot run. It states that the checks do not detect a change made between the check and the write.",
           "result": "pass",
           "rule_id": "security.writes.within-boundary"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:66",
-          "reason": "Untrusted content goes in backtick fences longer than any backtick run inside it, under a labelled section. The saved prompt opens that section with a fixed paragraph declaring it reference data, not instructions.",
+          "reason": "Untrusted content goes into a labelled section that opens with a fixed statement that it is reference data. Each item sits in a backtick fence longer than any backtick run in it, and its source is written as a code span.",
           "result": "pass",
           "rule_id": "security.embedded-content.contained"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:42",
-          "reason": "Step 6 forbids opening .env, .netrc, private keys, keystores and credentials files, as well as ambiguous .pem/.key files. It lists them by path only.",
+          "reason": "The procedure does not open .env, .netrc, private keys, keystores, credentials files or ambiguous .pem/.key files. It lists them by path only and notes that their content was left out.",
           "result": "pass",
           "rule_id": "security.secrets.no-unneeded-reads"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:10,36,40,61,66",
-          "reason": "Step 10 makes '## Untrusted reference material' the single place for content from issues, PRs, URLs, documents, repository files and commit subjects, with each item labelled by source and fenced. Context is limited to branch names, credential-free remotes, commit hashes and paths, introduced as repository-controlled names and written as code spans sized against backtick runs, with line breaks written as \\n. Step 4 keeps commit subjects out of Context, and step 6 quotes file content only in the untrusted section.",
+          "reason": "There is a single `## Untrusted reference material` section, and each item is labeled with its source (URL, path or git log). Context holds only branch names, credential-free remote URLs, paths and commit hashes, introduced as repository data and written as escaped code spans. Context explicitly excludes commit subjects and file content, and step 6 confines quotes to the untrusted section.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.untrusted-block"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:11,38,62",
-          "reason": "Embedded instructions are not acted on or moved into the Task; they are recorded as 'found in source, not adopted'. The Task is derived only from the user's own request.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:11,38,62,75",
+          "reason": "Embedded instructions are not acted on and not moved into the Task. The Task is derived only from the user's request, and instructions are never taken from untrusted material.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.no-fetched-instructions"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:12,25-32",
-          "reason": "Step 2 lists the allowed read-only actions: file listing and reading, specific git, uname, pwd and ls commands, gh/glab views and user-given URLs. It applies 'until the user approves the draft'. The only writes allowed are .tmp/, a missing .tmp/.gitignore and the prompt file, each after the checks pass. Every command used in later steps is on the list.",
+          "reason": "Step 2 lists the read-only actions: files, specific git commands, uname/pwd/ls, gh/glab view and URLs the user gave. It applies until approval and allows only writes of `.tmp/`, `.tmp/.gitignore` and the prompt file. Every command later steps use is on the list.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.read-only-allowlist"
         },
         {
           "check": "judged",
-          "citation": ".agents/skills/prompt-me/SKILL.md:13,27,57",
-          "reason": "Every git command listed or used carries --no-optional-locks.",
+          "citation": ".agents/skills/prompt-me/SKILL.md:27,57",
+          "reason": "Every listed git command uses `--no-optional-locks`.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.git-no-optional-locks"
         },
@@ -494,21 +504,21 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:15,55",
-          "reason": "Step 9 creates .tmp/.gitignore with exactly '*' only when it is missing, leaves an existing one unchanged and never modifies the repository's .gitignore.",
+          "reason": "`.tmp/.gitignore` is created with exactly `*` only when it is missing and is otherwise left unchanged. The repository's own .gitignore is never modified.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.tmp-gitignore"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:36,65",
-          "reason": "Step 4 runs git ls-files .tmp read-only. Step 10 adds a note to Assumptions & open questions that the .tmp/.gitignore rule does not untrack those files.",
+          "reason": "Step 4 runs `git --no-optional-locks ls-files .tmp`. If it lists files, step 10 adds the untracking note under Assumptions & open questions.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.tracked-drafts-note"
         },
         {
           "check": "judged",
           "citation": ".agents/skills/prompt-me/SKILL.md:17,46-53",
-          "reason": "Before any write, the skill runs pwd -P and ls -ld on all three paths. Missing paths are treated as expected. It stops on any link, including dangling ones, on a wrong type, an existing draft, or a check that fails or is unclear, and reports that nothing was written. It says the checks do not detect changes made between the check and the write.",
+          "reason": "Before writing, step 8 checks all three paths for links, including dangling ones, and for containment using `pwd -P`. Missing paths are treated as expected. A failed or unrunnable check stops the skill and reports that nothing was written, and the skill does not claim race-freedom.",
           "result": "pass",
           "rule_id": "idea.well-defined-prompt.a.write-preflight"
         },
@@ -549,35 +559,35 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
         {
           "check": "judged",
           "citation": "README.md:19,26",
-          "reason": "The README states this condition for both controls.",
+          "reason": "The README states the no-broader-bypass condition for both controls.",
           "result": "pass",
           "rule_id": "outside.gate.no-broader-bypass"
         },
         {
           "check": "judged",
           "citation": "README.md:20",
-          "reason": "The README states this condition for codeowners-agent-config, the only control that lists it.",
+          "reason": "The README states the plan-enforcement condition for codeowners-agent-config, the only control that lists it.",
           "result": "pass",
           "rule_id": "outside.gate.plan-enforced"
         },
         {
           "check": "judged",
           "citation": "README.md:24,29",
-          "reason": "The README states periodic verification for both controls.",
+          "reason": "The README states the periodic-verification condition for both controls.",
           "result": "pass",
           "rule_id": "outside.gate.periodic-verification"
         },
         {
           "check": "judged",
           "citation": "README.md:18",
-          "reason": "The README recommends a CODEOWNERS entry covering .agents/, .claude/, .codex/, AGENTS.md, CODEOWNERS and the other agent configuration files, together with a branch rule that requires code-owner review.",
+          "reason": "The README recommends a CODEOWNERS entry covering .agents/, .claude/, .codex/, AGENTS.md and the other agent configuration files, together with the branch rule that requires code-owner review.",
           "result": "pass",
           "rule_id": "outside.codeowners.agent-config"
         },
         {
           "check": "judged",
           "citation": "request.json context.facts.opens_prs; SKILL.md:32",
-          "reason": "The agent opens no pull requests (context facts opens_prs: false), and the skill forbids commit and push while drafting.",
+          "reason": "The context records opens_prs as false, and the skill forbids pushing, committing and acting on PRs. No agent-opened PRs are recommended.",
           "result": "not-applicable",
           "rule_id": "outside.merge.rule-for-agent-prs"
         },
@@ -613,7 +623,7 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
       "environment": "throwaway workspace with only the frozen skill and fixtures; invoked as /prompt-me; tools: Skill, Read, Grep, Glob; network: none requested; app.py sha256 3f50741f0940aed0388efcef882bdba673c7febb0268695ccaf53c75b7c45854",
       "expected": "activates",
       "file_hashes": {
-        ".agents/skills/prompt-me/SKILL.md": "e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7",
+        ".agents/skills/prompt-me/SKILL.md": "a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd",
         ".agents/skills/prompt-me/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
         ".agents/skills/prompt-me/references/requirements.md": "2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2"
       },
@@ -634,7 +644,7 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
       "environment": "throwaway workspace with only the frozen skill and fixtures; tools: Skill, Read, Grep, Glob; network: none requested; greeting.txt sha256 6ddd243dd2f21014018d26b20985d9616d387a40a120f08e43a1dc87146734f0",
       "expected": "does-not-activate",
       "file_hashes": {
-        ".agents/skills/prompt-me/SKILL.md": "e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7",
+        ".agents/skills/prompt-me/SKILL.md": "a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd",
         ".agents/skills/prompt-me/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
         ".agents/skills/prompt-me/references/requirements.md": "2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2"
       },
@@ -648,12 +658,42 @@ link  .claude/skills/prompt-me -> ../../.agents/skills/prompt-me
       "reason": "no Skill tool call for the candidate",
       "result": "pass",
       "run_id": "20261027T051310Z-7d1c50be"
+    },
+    {
+      "case_id": "prompt-me-no-shell-writes-nothing",
+      "details": {
+        "case_digest": "ef931b8f486b025b913b41b73be65cff20ecb13830da0b60e6532e56bc241817",
+        "changes": [],
+        "denied": [],
+        "failed": [],
+        "gaps": [
+          "Claude Code's file tools are limited by its permission rules, not by an operating-system sandbox",
+          "denials are those Claude Code reports for its own tool calls",
+          "a file written and removed again during the run is not in the before-and-after comparison"
+        ],
+        "requests": []
+      },
+      "environment": "throwaway workspace with only the frozen skill and fixtures; invoked as /prompt-me; tools: Skill, Read, Grep, Glob, Write, Edit; network: none requested; writes: .tmp/**; app.py sha256 3f50741f0940aed0388efcef882bdba673c7febb0268695ccaf53c75b7c45854",
+      "expected": "behaves as declared",
+      "file_hashes": {
+        ".agents/skills/prompt-me/SKILL.md": "a6a28c7d4b70fb18d34fbe6e0487a3a822f8addf8a64226339fecb7a832433cd",
+        ".agents/skills/prompt-me/agents/openai.yaml": "a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94",
+        ".agents/skills/prompt-me/references/requirements.md": "2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2"
+      },
+      "harness": "claude-code",
+      "harness_version": "2.1.311 (Claude Code)",
+      "inventory": "not observable",
+      "kind": "behavior",
+      "observed_activation": "/prompt-me was invoked",
+      "part_id": "A",
+      "prompt": "add input validation to the signup handler in app.py so empty emails are rejected",
+      "reason": "activated (/prompt-me was invoked) and every assertion held",
+      "result": "pass",
+      "run_id": "20261027T051310Z-7d1c50be"
     }
   ],
-  "scope": "Review (recommended): judged A",
-  "scope_parts": [
-    "A"
-  ],
+  "scope": "Extensive review (rarely needed): judged A",
+  "scope_parts": null,
   "symlinks": {
     ".claude/skills/prompt-me": "../../.agents/skills/prompt-me"
   },
