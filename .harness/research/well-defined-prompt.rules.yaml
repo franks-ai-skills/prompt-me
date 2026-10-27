@@ -1,6 +1,6 @@
 briefs:
-  A: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-digest: 8534cecf336719d3c1bada39d26bfd6fbb7779d38cf41947592220bdbdb8e5a0
+  A: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+digest: a9d1a41ce855fec682d5d975c28a3a379bd13a4b61c47d4590c778c3e85eea39
 rules:
 - part_id: A
   rule:
@@ -9,9 +9,12 @@ rules:
     kind: must
     severity: error
     check: judged
-    statement: The prompt file puts all content taken from issues, pull requests, URLs, documents and
-      repository files inside one clearly delimited "Untrusted reference material" section, with each
-      item labeled by its source (URL or path), and none of that content appears outside the section.
+    statement: The prompt file puts all content taken from issues, pull requests, URLs, documents, repository
+      files and commit subjects inside one clearly delimited "Untrusted reference material" section, with
+      each item labeled by its source (URL, path or git log), and none of that content appears outside
+      the section; the only repository data allowed outside it are branch names, remote URLs with credentials
+      removed, file paths and commit hashes in the Context section, each marked as repository data and
+      escaped so that it cannot start a heading, list or code block.
     applies_to:
       harnesses:
       - claude-code
@@ -20,6 +23,7 @@ rules:
     sources:
     - https://genai.owasp.org/llmrisk/llm01-prompt-injection/
     - https://arxiv.org/abs/2403.14720
+    - https://spec.commonmark.org/0.31.2/
     contested: false
 - part_id: A
   rule:
@@ -127,4 +131,25 @@ rules:
     evidence: Vendor
     sources:
     - https://git-scm.com/docs/gitignore
+    contested: false
+- part_id: A
+  rule:
+    id: idea.well-defined-prompt.a.write-preflight
+    concept: idea
+    kind: must
+    severity: error
+    check: judged
+    statement: Before writing any file, the skill checks .tmp, .tmp/.gitignore and the final draft path
+      for symbolic links, including dangling ones, and checks that each stays inside the resolved working
+      directory, treating a missing .tmp, .tmp/.gitignore or draft path as expected; when a check fails
+      or cannot be completed, it stops and reports this before writing anything, and it does not claim
+      that its writes are race-free.
+    applies_to:
+      harnesses:
+      - claude-code
+      - codex
+    evidence: Advisory
+    sources:
+    - https://cwe.mitre.org/data/definitions/59.html
+    - https://cwe.mitre.org/data/definitions/367.html
     contested: false

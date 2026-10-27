@@ -7,7 +7,7 @@ briefs:
   digest: 23ed0211c08dde6ecde7b5b79cbaf0f08ce0ccb8e6d3d5de65b03f727e5f6b0b
 - pass: deep
   part_id: A
-  digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
 findings:
 - id: F1
   part_id: null
@@ -77,164 +77,185 @@ findings:
   brief_digest: 23ed0211c08dde6ecde7b5b79cbaf0f08ce0ccb8e6d3d5de65b03f727e5f6b0b
   source_role: primary
   pass: survey
-- id: F24
+- id: F42
   part_id: A
-  claim: OWASP recommends separating untrusted content and clearly marking it so it has less influence
-    on user prompts.
+  claim: OWASP describes indirect prompt injection as occurring when an LLM accepts input from external
+    sources such as websites or files, which covers fetched issue pages and documents.
   source: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
-  fetched: '2026-10-24'
+  fetched: '2026-10-27'
+  quote: Indirect prompt injections occur when an LLM accepts input from external sources, such as websites
+    or files.
+  context: Indirect prompt injections occur when an LLM accepts input from external sources, such as websites
+    or files.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F43
+  part_id: A
+  claim: OWASP recommends separating and clearly marking untrusted content to limit its influence, which
+    supports a clearly marked 'Untrusted reference material' block.
+  source: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+  fetched: '2026-10-27'
   quote: Separate and clearly denote untrusted content to limit its influence on user prompts.
   context: Separate and clearly denote untrusted content to limit its influence on user prompts.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F29
+- id: F46
   part_id: A
-  claim: Patterns in a .gitignore file match relative to that file's own directory, so a .tmp/.gitignore
-    containing * applies only inside .tmp/.
-  source: https://git-scm.com/docs/gitignore
-  fetched: '2026-10-24'
-  quote: These patterns match relative to the location of the .gitignore file.
-  context: Patterns read from a .gitignore file in the same directory as the path, or in any parent directory
-    (up to the top-level of the working tree), with patterns in the higher level files being overridden
-    by those in lower level files down to the directory containing the file. These patterns match relative
-    to the location of the .gitignore file. A project normally includes such .gitignore files in its repository,
-    containing patterns for files generated as part of the project build.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  claim: The spotlighting paper says indirect prompt injection works by embedding adversarial instructions
+    in untrusted data that is processed alongside user commands.
+  source: https://arxiv.org/abs/2403.14720
+  fetched: '2026-10-27'
+  quote: Indirect prompt injection attacks take advantage of this vulnerability by embedding adversarial
+    instructions into untrusted data being processed alongside user commands.
+  context: However, the LLM is unable to distinguish which sections of prompt belong to various input
+    sources. Indirect prompt injection attacks take advantage of this vulnerability by embedding adversarial
+    instructions into untrusted data being processed alongside user commands. Often, the LLM will mistake
+    the adversarial instructions as user commands to be followed, creating a security vulnerability in
+    the larger system.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F30
+- id: F50
+  part_id: A
+  claim: RFC 3986 deprecates the user:password format in the URI userinfo field, which supports removing
+    credentials from remote URLs before they are written to the prompt.
+  source: https://www.rfc-editor.org/rfc/rfc3986#section-3.2.1
+  fetched: '2026-10-27'
+  quote: Use of the format "user:password" in the userinfo field is deprecated.
+  context: Use of the format "user:password" in the userinfo field is deprecated.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F51
+  part_id: A
+  claim: A GitLab Runner issue reports a real case in which a git remote URL leaked the username and a
+    temporary token used to fetch the repository.
+  source: https://gitlab.com/gitlab-org/gitlab-runner/-/issues/29655
+  fetched: '2026-10-27'
+  quote: The remote URL leaks the username and temporary token used to fetch the repository for the job.
+  context: The remote URL leaks the username and temporary token used to fetch the repository for the
+    job.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F52
+  part_id: A
+  claim: CWE-59 says link-following vulnerabilities are multi-factor vulnerabilities, which is relevant
+    to checking .tmp and the draft path for symlinks.
+  source: https://cwe.mitre.org/data/definitions/59.html
+  fetched: '2026-10-27'
+  quote: Link following vulnerabilities are Multi-factor Vulnerabilities (MFV).
+  context: Link following vulnerabilities are Multi-factor Vulnerabilities (MFV).
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F53
+  part_id: A
+  claim: CWE-367 says a resource's state can change between the check and the use, which is why the symlink
+    and containment checks are preflight checks and do not guarantee race-free writing.
+  source: https://cwe.mitre.org/data/definitions/367.html
+  fetched: '2026-10-27'
+  quote: The product checks the state of a resource before using that resource, but the resource's state
+    can change between the check and the use in a way that invalidates the results of the check.
+  context: The product checks the state of a resource before using that resource, but the resource's state
+    can change between the check and the use in a way that invalidates the results of the check.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F54
+  part_id: A
+  claim: Git matches patterns in a .gitignore file relative to that file's location, so a .tmp/.gitignore
+    applies to the .tmp directory.
+  source: https://git-scm.com/docs/gitignore
+  fetched: '2026-10-27'
+  quote: These patterns match relative to the location of the .gitignore file.
+  context: These patterns match relative to the location of the .gitignore file.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F55
+  part_id: A
+  claim: Gitignore patterns do not affect files Git already tracks, so a '*' in .tmp/.gitignore does not
+    stop drafts that were already committed from being tracked.
+  source: https://git-scm.com/docs/gitignore
+  fetched: '2026-10-27'
+  quote: Files already tracked by Git are not affected; see the NOTES below for details.
+  context: Files already tracked by Git are not affected; see the NOTES below for details.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F56
   part_id: A
   claim: In gitignore patterns, an asterisk matches anything except a slash.
   source: https://git-scm.com/docs/gitignore
-  fetched: '2026-10-24'
+  fetched: '2026-10-27'
   quote: An asterisk "*" matches anything except a slash.
-  context: An asterisk "*" matches anything except a slash. The character "?" matches any one character
-    except "/". The range notation, e.g. [a-zA-Z], can be used to match one of the characters in a range.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  context: An asterisk "*" matches anything except a slash.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F31
+- id: F58
   part_id: A
-  claim: gitignore does not affect files Git already tracks. A drafted prompt that is already tracked
-    in .tmp/ stays tracked even after the * rule is added.
-  source: https://git-scm.com/docs/gitignore
-  fetched: '2026-10-24'
-  quote: Files already tracked by Git are not affected; see the NOTES below for details.
-  context: A gitignore file specifies intentionally untracked files that Git should ignore. Files already
-    tracked by Git are not affected; see the NOTES below for details.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  claim: CommonMark allows any ASCII punctuation character to be backslash-escaped, which gives one way
+    to escape Markdown delimiters in repository data.
+  source: https://spec.commonmark.org/0.31.2/
+  fetched: '2026-10-27'
+  quote: 'Any ASCII punctuation character may be backslash-escaped:'
+  context: 'Any ASCII punctuation character may be backslash-escaped:'
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F34
+- id: F59
   part_id: A
-  claim: Spotlighting is a family of prompt engineering techniques meant to improve an LLM's ability to
-    distinguish among multiple sources of input, proposed in response to LLMs mistaking adversarial instructions
-    in data for user commands.
-  source: https://arxiv.org/abs/2403.14720
-  fetched: '2026-10-24'
-  quote: We introduce spotlighting, a family of prompt engineering techniques that can be used to improve
-    LLMs' ability to distinguish among multiple sources of input.
-  context: Often, the LLM will mistake the adversarial instructions as user commands to be followed, creating
-    a security vulnerability in the larger system. We introduce spotlighting, a family of prompt engineering
-    techniques that can be used to improve LLMs' ability to distinguish among multiple sources of input.
-    The key insight is to utilize transformations of an input to provide a reliable and continuous signal
-    of its provenance.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  claim: gh issue view shows an issue's title, body and other information.
+  source: https://cli.github.com/manual/gh_issue_view
+  fetched: '2026-10-27'
+  quote: Display the title, body, and other information about an issue.
+  context: Display the title, body, and other information about an issue.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F35
+- id: F61
   part_id: A
-  claim: The key idea of spotlighting is to transform an input so that it carries a reliable and continuous
-    signal of where it came from.
-  source: https://arxiv.org/abs/2403.14720
-  fetched: '2026-10-24'
-  quote: The key insight is to utilize transformations of an input to provide a reliable and continuous
-    signal of its provenance.
-  context: We introduce spotlighting, a family of prompt engineering techniques that can be used to improve
-    LLMs' ability to distinguish among multiple sources of input. The key insight is to utilize transformations
-    of an input to provide a reliable and continuous signal of its provenance.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-  source_role: primary
-  pass: deep
-- id: F36
-  part_id: A
-  claim: In the GitHub MCP attack, the agent reads through the repository's issues, reaches the injected
-    payload, and then pulls private repository data into context and leaks it into a pull request on the
-    public repo.
+  claim: The vulnerability does not require compromised tools; it arises with fully trusted tools because
+    agents connected to platforms like GitHub can be exposed to untrusted information.
   source: https://invariantlabs.ai/blog/mcp-github-vulnerability
-  fetched: '2026-10-24'
-  quote: The agent now goes through the list of issues until it finds the attack payload.
-  context: The agent now goes through the list of issues until it finds the attack payload. It willingly
-    pulls private repository data into context, and leaks it into a pull request of the pacman repo, which
-    is freely accessible to the attacker since it is public.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-  source_role: primary
-  pass: deep
-- id: F37
-  part_id: A
-  claim: The vulnerability arises even when the tools are fully trusted, because agents are exposed to
-    untrusted information when connected to platforms like GitHub.
-  source: https://invariantlabs.ai/blog/mcp-github-vulnerability
-  fetched: '2026-10-24'
+  fetched: '2026-10-27'
   quote: Instead, the issue emerges even with fully trusted tools, as agents can be exposed to untrusted
     information when connected to external platforms like GitHub.
   context: Unlike previously-discovered tool poisoning attacks with MCP, this vulnerability does not require
     the MCP tools themselves to be compromised. Instead, the issue emerges even with fully trusted tools,
     as agents can be exposed to untrusted information when connected to external platforms like GitHub.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
-- id: F38
+- id: F64
   part_id: A
-  claim: Agents connected to GitHub can be exposed to untrusted information even when the tools are fully
-    trusted; the attack does not need compromised tools.
-  source: https://invariantlabs.ai/blog/mcp-github-vulnerability
-  fetched: '2026-10-24'
-  quote: Instead, the issue emerges even with fully trusted tools, as agents can be exposed to untrusted
-    information when connected to external platforms like GitHub.
-  context: Unlike previously-discovered tool poisoning attacks with MCP, this vulnerability does not require
-    the MCP tools themselves to be compromised. Instead, the issue emerges even with fully trusted tools,
-    as agents can be exposed to untrusted information when connected to external platforms like GitHub.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-  source_role: primary
-  pass: deep
-- id: F39
-  part_id: A
-  claim: In the described attack, the injected payload sat in the issues of a repository being read by
-    the account owner's agent, and that agent then leaked the owner's private repository data.
-  source: https://invariantlabs.ai/blog/mcp-github-vulnerability
-  fetched: '2026-10-24'
-  quote: The agent now goes through the list of issues until it finds the attack payload.
-  context: The agent now goes through the list of issues until it finds the attack payload. It willingly
-    pulls private repository data into context, and leaks it into a pull request of the pacman repo, which
-    is freely accessible to the attacker since it is public.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-  source_role: primary
-  pass: deep
-- id: F40
-  part_id: A
-  claim: git's --no-optional-locks option skips optional operations that require locks and is equivalent
-    to setting GIT_OPTIONAL_LOCKS to 0.
+  claim: Setting GIT_OPTIONAL_LOCKS to false makes Git skip optional sub-operations that take a lock,
+    for example keeping git status from refreshing the index as a side effect.
   source: https://git-scm.com/docs/git
-  fetched: '2026-10-24'
-  quote: This is equivalent to setting the GIT_OPTIONAL_LOCKS to 0.
-  context: Do not perform optional operations that require locks. This is equivalent to setting the GIT_OPTIONAL_LOCKS
-    to 0.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
-  source_role: primary
-  pass: deep
-- id: F41
-  part_id: A
-  claim: Setting GIT_OPTIONAL_LOCKS to false stops git status from refreshing the index as a side effect.
-  source: https://git-scm.com/docs/git
-  fetched: '2026-10-24'
-  quote: For example, this will prevent git status from refreshing the index as a side effect.
+  fetched: '2026-10-27'
+  quote: If this Boolean environment variable is set to false, Git will complete any requested operation
+    without performing any optional sub-operations that require taking a lock.
   context: If this Boolean environment variable is set to false, Git will complete any requested operation
     without performing any optional sub-operations that require taking a lock. For example, this will
     prevent git status from refreshing the index as a side effect. This is useful for processes running
     in the background which do not want to cause lock contention with other operations on the repository.
-  brief_digest: 7775bb128c2c1fb6d9beba0c1b5238fa687592f5c0a5f4911cd9242bbeb846ba
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
+  source_role: primary
+  pass: deep
+- id: F65
+  part_id: A
+  claim: The --no-optional-locks option makes Git skip optional operations that need locks, and is equivalent
+    to setting GIT_OPTIONAL_LOCKS to 0.
+  source: https://git-scm.com/docs/git
+  fetched: '2026-10-27'
+  quote: Do not perform optional operations that require locks.
+  context: Do not perform optional operations that require locks. This is equivalent to setting the GIT_OPTIONAL_LOCKS
+    to 0.
+  brief_digest: 96b234909beb4706011b6ac3438c9a96e24b77ee0a5d092de7b24928d73caecb
   source_role: primary
   pass: deep
 support:
@@ -308,11 +329,6 @@ support:
   quote_check: pass
   verdict: supported
   worker_ref: support-f23
-- finding_id: F24
-  quote_check: pass
-  verdict: supported
-  worker_ref: support-f24
-  finding_digest: db51235d67f3b3d31e92178e28a5fd8c78bddd7f287a19f079ccc0eed561a0f8
 - finding_id: F25
   quote_check: fail
   verdict: missing
@@ -329,21 +345,6 @@ support:
   quote_check: pass
   verdict: unsupported
   worker_ref: support-f28
-- finding_id: F29
-  quote_check: pass
-  verdict: supported
-  worker_ref: support-f29
-  finding_digest: 9171b241d4bdf28fecb981905b71c74e341e90806ddf88b7d9986d220d9df473
-- finding_id: F30
-  quote_check: pass
-  verdict: supported
-  worker_ref: support-f30
-  finding_digest: ae6ad6374d96e9c690b309b0391b6c167bdb7c9b5659980b8ed54cfab3770753
-- finding_id: F31
-  quote_check: pass
-  verdict: supported
-  worker_ref: support-f31
-  finding_digest: 69d3ae19b26f3eb31d48437546f442e45601ae3e4b06ecd9fc67b7af8364cf26
 - finding_id: F32
   quote_check: pass
   verdict: unsupported
@@ -352,46 +353,117 @@ support:
   quote_check: fail
   verdict: missing
   worker_ref: support-f33
-- finding_id: F34
+- finding_id: F42
   quote_check: pass
   verdict: supported
-  worker_ref: support-f34
-  finding_digest: 26f3c53b1c75413d0c1165712cb83ef1bcc24493d3f926916fd462454e5eaf95
-- finding_id: F35
+  worker_ref: support-f42
+  finding_digest: 2bbebd9bfb5b30106240697c3935a925572c3b1a82fdeb08258a4c83e3e718f4
+- finding_id: F43
   quote_check: pass
   verdict: supported
-  worker_ref: support-f35
-  finding_digest: f64f910213a04c9a6da4901f86aaa3aafbf15d2e39d3d607f01819c2ad6aa805
-- finding_id: F36
+  worker_ref: support-f43
+  finding_digest: 35c593e2d1c998aec6f7aa877bb4f041e0e62827845a58eb2ee6c44badd69b79
+- finding_id: F44
+  quote_check: fail
+  verdict: missing
+  worker_ref: support-f44
+- finding_id: F45
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f45
+- finding_id: F46
   quote_check: pass
   verdict: supported
-  worker_ref: support-f36
-  finding_digest: a0a2790e2be88780fb29cadfed1a65db476fa2fef7012badb58ee2b7cf73f7a6
-- finding_id: F37
+  worker_ref: support-f46
+  finding_digest: cc7f97acc9976b090d816504818f2ff475301e1646df04803a2fe49bc3af9b87
+- finding_id: F47
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f47
+- finding_id: F48
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f48
+- finding_id: F49
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f49
+- finding_id: F50
   quote_check: pass
   verdict: supported
-  worker_ref: support-f37
-  finding_digest: 38ba58b629057cf4ac037dec55f26f2104cf324f4c35207f09b0cdc5f4ad10be
-- finding_id: F38
+  worker_ref: support-f50
+  finding_digest: 5a606b1c0b61c742bf44a2ae72a760eaa9e7115258f2ed927db3ba2cd72ed97b
+- finding_id: F51
   quote_check: pass
   verdict: supported
-  worker_ref: support-f38
-  finding_digest: e702506bb248cc2ee6f0196b3422741a1f831b2ce5d62e9f5202de81ee19e23c
-- finding_id: F39
+  worker_ref: support-f51
+  finding_digest: ab4243bab9edb91e395139a128e510375608a910aff270fe6cebbcb229f47b17
+- finding_id: F52
   quote_check: pass
   verdict: supported
-  worker_ref: support-f39
-  finding_digest: 5e5c2a45eb060a55b55e434b45005df8c473506e91634462babb008e00f54e84
-- finding_id: F40
+  worker_ref: support-f52
+  finding_digest: 4be35f8a366a303c69a90e338fca4bde3624392fe29a0ef83d1effad71315ecf
+- finding_id: F53
   quote_check: pass
   verdict: supported
-  worker_ref: support-f40
-  finding_digest: 64f1176b659888613cdd626de3ec898a778fc6b97ecf3ec743096777eb44c319
-- finding_id: F41
+  worker_ref: support-f53
+  finding_digest: 83fde00a9859adb27a3c367bc4d75be9ce0a14984c4b92709d98e40fda435611
+- finding_id: F54
   quote_check: pass
   verdict: supported
-  worker_ref: support-f41
-  finding_digest: 0507d2934b61bf8baaa3f4d546c48a4765bc3300478ca2068e564403532856e0
+  worker_ref: support-f54
+  finding_digest: e4a592b7520250b0d72931c9d91e84bfd34e243a7a107d76e02f4bc85143326e
+- finding_id: F55
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f55
+  finding_digest: 2de19fef8d7ea4e25fdb9ae20e139483dc4d4c6f1c3b56f5d7fff7a96339cceb
+- finding_id: F56
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f56
+  finding_digest: 59b21d8e6d86801b4fffe1d66a1561d4271c968c41664f78aa9a8de5b30eee83
+- finding_id: F57
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f57
+- finding_id: F58
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f58
+  finding_digest: dcc4f74f9e3661db3e9aec1c6ae6e314863ac8f3ad931243b88c429342471a70
+- finding_id: F59
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f59
+  finding_digest: b11e1b576c398c0cbe75819b332d522e7a9b9e424ba1ee90a3b4ab4d298801d0
+- finding_id: F60
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f60
+- finding_id: F61
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f61
+  finding_digest: 0177447f0b700d38ca5292cea9f3462858303ff761034ca41d412482525115dd
+- finding_id: F62
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f62
+- finding_id: F63
+  quote_check: pass
+  verdict: unsupported
+  worker_ref: support-f63
+- finding_id: F64
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f64
+  finding_digest: ce5acadd2f9d4b36ef6e9de8aa5f44493bb388da75b1896b42d816f3579bccaa
+- finding_id: F65
+  quote_check: pass
+  verdict: supported
+  worker_ref: support-f65
+  finding_digest: d50f6c649880ea9594597f6f0475770138274c53abba9116859c40a14c57efbf
 drift: []
 ---
 Findings grouped by pass and part are in the frontmatter; dropped findings are not kept.
