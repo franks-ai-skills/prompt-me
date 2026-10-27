@@ -234,7 +234,7 @@ research:
   survey_digest: null
   deep_digests: {}
 accepted_revision:
-  digest: 8534cecf336719d3c1bada39d26bfd6fbb7779d38cf41947592220bdbdb8e5a0
+  digest: a9d1a41ce855fec682d5d975c28a3a379bd13a4b61c47d4590c778c3e85eea39
   rule_ids:
   - idea.well-defined-prompt.a.untrusted-block
   - idea.well-defined-prompt.a.no-fetched-instructions
@@ -243,6 +243,7 @@ accepted_revision:
   - idea.well-defined-prompt.a.issues-untrusted-any-owner
   - idea.well-defined-prompt.a.tmp-gitignore
   - idea.well-defined-prompt.a.tracked-drafts-note
+  - idea.well-defined-prompt.a.write-preflight
 split_confirmed: true
 licensing:
   answer: added
