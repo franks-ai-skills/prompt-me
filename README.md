@@ -1,6 +1,13 @@
-# Forge owner test
+# prompt-me
 
-Throwaway repository for a hands-on Harness Forge test on 2026-10-24.
+`prompt-me` is an agent skill for Claude Code and Codex. It turns your request into a well-defined prompt instead of carrying it out, saves that prompt for review and stops.
+
+- **Start it:** `/prompt-me <request>` in Claude Code, `$prompt-me <request>` in Codex. The agent never starts it on its own.
+- **What it collects:** read-only context: the working directory, the git branch, remotes and state, the issues, pull requests or URLs you name, and the files the request touches. Content from those sources goes into a separate untrusted section of the prompt and is never followed as instructions.
+- **What it writes:** `.tmp/prompt-me-<intent>.md`, and `.tmp/.gitignore` containing `*` when that file is missing. Before it writes, it checks these paths for symbolic links and stops if it finds one.
+- **How to continue:** paste the file's content into a new session, or reply "go ahead" to have the request carried out in the current session.
+
+[Harness Forge](https://github.com/franks-ai-skills/harness-forge) built and verified the skill. Its decision record, research and verification report are in `.harness/`.
 
 ## Outside controls
 
