@@ -22,3 +22,7 @@ Throwaway repository for a hands-on Harness Forge test on 2026-10-24.
 ## Where the skills load
 
 Forge builds `prompt-me` into this repository (`.agents/skills/<name>/`), and a skill there loads only in this repository, although the idea's reach is public. This release packages no plugin: publish this repository, and each user copies each skill's folder to their user skills location: `~/.claude/skills/<name>/` for Claude Code and `~/.agents/skills/<name>/` for Codex. Forge verifies the skills in this repository, not a copy.
+
+## License
+
+Except where separate terms are stated, this repository is licensed under the GNU Affero General Public License v3.0 only ([AGPL-3.0-only](LICENSE)). Third-party material retains its applicable terms.

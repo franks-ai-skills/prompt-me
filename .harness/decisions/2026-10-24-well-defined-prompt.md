@@ -244,6 +244,11 @@ accepted_revision:
   - idea.well-defined-prompt.a.tmp-gitignore
   - idea.well-defined-prompt.a.tracked-drafts-note
 split_confirmed: true
+licensing:
+  answer: added
+  license: AGPL-3.0-only
+  sha256: 8d56b405468aad11f87ab5763f901e276e08d9646ff5c8481b1762b6b789e9ed
+  basis: 8c60be71c8f96a94047b966c9bbb1fa02200e84e3aaa617227c082824b50b018
 ---
 i want to create a skill that is only used on purpose, it should be publicly available for
   anyone, the skill should gather information about the current environment (working dir),
