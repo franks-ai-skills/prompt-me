@@ -229,6 +229,17 @@ parts:
     - outside.merge.no-agent-bypass
     availability: available
     required_for_goal: false
+  build:
+    forge:
+      version: 0.4.0
+      source: unknown
+      commit: unknown
+      tree: unknown
+    outputs:
+      .agents/skills/prompt-me/SKILL.md: sha256:e7adf77f641bb9d234bb7588456cb5a2d9c9c2e4d0ce51f04c5432807262f7a7
+      .agents/skills/prompt-me/agents/openai.yaml: sha256:a1499d95abd8447558c535fe5554adcc3c9b988a0a39264a6283d430effe1e94
+      .agents/skills/prompt-me/references/requirements.md: sha256:2fc2ee5467c8c04b2ff623f7670a68fe130add36817cdaa7d5c25c2f64aef4e2
+      .claude/skills/prompt-me: link:../../.agents/skills/prompt-me
 retired_ids: []
 research:
   survey_digest: null
